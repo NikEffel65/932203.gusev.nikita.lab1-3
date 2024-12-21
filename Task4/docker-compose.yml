@@ -1,0 +1,28 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - ./data:/var/lib/rabbitmq/
+
+  api-gateway:
+    build: ./api-gateway
+    depends_on:
+      - worker1
+      - worker2
+    ports:
+      - "80:80"
+
+  worker1:
+    build: ./worker-service
+    depends_on:
+      - rabbitmq
+
+  worker2:
+    build: ./worker-service
+    depends_on:
+      - rabbitmq
+
